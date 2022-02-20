@@ -1,0 +1,22 @@
+{
+    "name": "hexlet/code",
+    "description": "php-project-lvl2",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kate1199",
+            "email": "kate.kisel99@yandex.by"
+        }
+    ],
+    "require": {
+        "docopt/docopt": "^1.0"
+    },
+    "autoload": {
+        "files": [
+            "src/help.php"
+        ]
+    },
+    "bin": [
+        "bin/gendiff"
+    ]
+}
