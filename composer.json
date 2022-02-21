@@ -9,11 +9,13 @@
         }
     ],
     "require": {
-        "docopt/docopt": "^1.0"
+        "docopt/docopt": "^1.0",
+        "lstrojny/functional-php": "^1.17"
     },
     "autoload": {
         "files": [
-            "src/help.php"
+            "src/help.php",
+            "src/gendiff.php"
         ]
     },
     "bin": [
