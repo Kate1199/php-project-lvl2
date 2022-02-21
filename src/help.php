@@ -1,10 +1,10 @@
 <?php
 
-namespace PHP\Project\Lvl2\Help;
+namespace PHP\Project\Lvl2\help;
 
 use Docopt;
 
-function showHelp()
+function getParams()
 {
     $doc = <<<DOC
     Generate diff
@@ -13,6 +13,7 @@ function showHelp()
       gendiff (-h|--help)
       gendiff (-v|--version)
       gendiff [--format <fmt>] <firstFile> <secondFile>
+      gendiff <firstFile> <secondFile>
 
     Options:
       -h --help                     Show this screen
