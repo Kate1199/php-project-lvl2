@@ -34,15 +34,16 @@ function getDiffArray(array $file1, array $file2, array $diff): array
             $file1[$key] = convertBoolToStr($file1[$key]);
 
             if ($file1[$key] !== $file2[$key]) {
-                return ["- {$key}: {$file1[$key]}\n", "+ {$key}: {$file2[$key]}\n"];
+                $result = ["- {$key}: {$file1[$key]}\n", "+ {$key}: {$file2[$key]}\n"];
             } else {
-                return [" {$key}: {$value}\n"];
+                $result = [" {$key}: {$value}\n"];
             }
         } elseif (array_key_exists($key, $file1)) {
-            return ["- {$key}: {$value}\n"];
+            $result = ["- {$key}: {$value}\n"];
         } else {
-            return ["+ {$key}: {$value}\n"];
+            $result = ["+ {$key}: {$value}\n"];
         }
+        return $result;
     }, array_keys($diff), $diff);
 
     return flatten($output);
