@@ -15,7 +15,7 @@ jobs:
       with:
         php-version: '7.4'
     - name: Install
-      run: make install
+      run: composer install
     - uses: actions/checkout@v2
     - name: lint
       run: make lint
