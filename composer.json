@@ -16,7 +16,10 @@
         "files": [
             "src/help.php",
             "src/gendiff.php"
-        ]
+        ],
+        "psr-4": {
+            "PHP\\Project\\Lvl2\\GendiffTest\\": "tests//"
+        }
     },
     "bin": [
         "bin/gendiff"

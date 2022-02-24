@@ -36,7 +36,7 @@ function getDiffArray(array $file1, array $file2, array $diff): array
             if ($file1[$key] !== $file2[$key]) {
                 $result = ["- {$key}: {$file1[$key]}\n", "+ {$key}: {$file2[$key]}\n"];
             } else {
-                $result = [" {$key}: {$value}\n"];
+                $result = ["  {$key}: {$value}\n"];
             }
         } elseif (array_key_exists($key, $file1)) {
             $result = ["- {$key}: {$value}\n"];
@@ -54,10 +54,10 @@ function genDiff(string $filename1, string $filename2): string
     $file1 = makeAssociativeArray($filename1);
     $file2 = makeAssociativeArray($filename2);
 
-    $diff = array_merge($file2, $file1);
-    ksort($diff);
+    $bothFiles = array_merge($file2, $file1);
+    ksort($bothFiles);
 
-    $output = getDiffArray($file1, $file2, $diff);
+    $output = getDiffArray($file1, $file2, $bothFiles);
 
     return implode($output);
 }
