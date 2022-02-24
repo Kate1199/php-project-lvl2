@@ -3,4 +3,4 @@ lint:
 install:
 	composer install
 test:
-	phpunit tests/GendiffTest.php
+	./vendor/bin/phpunit --bootstrap vendor/autoload.php --testdox tests
