@@ -3,4 +3,4 @@ lint:
 install:
 	composer install
 test:
-	./vendor/bin/phpunit --bootstrap vendor/autoload.php --testdox tests
+	composer exec --verbose phpunit tests -- --coverage-clover phpunit.xml
