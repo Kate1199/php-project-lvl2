@@ -4,7 +4,6 @@ namespace PHP\Project\Lvl2;
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . "/../src/autoload.php";
 use function PHP\Project\Lvl2\gendiff\makeAssociativeArray;
 use function PHP\Project\Lvl2\gendiff\convertBoolToStr;
 use function PHP\Project\Lvl2\gendiff\getDiffArray;
