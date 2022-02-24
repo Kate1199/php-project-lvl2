@@ -4,6 +4,7 @@ namespace PHP\Project\Lvl2;
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . "/../src/autoload.php";
 use function PHP\Project\Lvl2\gendiff\makeAssociativeArray;
 use function PHP\Project\Lvl2\gendiff\convertBoolToStr;
 use function PHP\Project\Lvl2\gendiff\getDiffArray;
@@ -35,7 +36,7 @@ class GendiffTest extends TestCase
     public function testMakeAssociativeArray()
     {
         $expected = $this->file1;
-        $actual = makeAssociativeArray('test/fixtures/file1.json');
+        $actual = makeAssociativeArray('tests/fixtures/file1.json');
 
         $this->assertEquals($expected, $actual);
     }
@@ -100,7 +101,7 @@ class GendiffTest extends TestCase
         + verbose: true
         
         DIF;
-        $actual = gendiff('test/fixtures/file1.json', 'test/fixtures/file2.json');
+        $actual = gendiff('tests/fixtures/file1.json', 'tests/fixtures/file2.json');
 
         $this->assertEquals($expected, $actual);
     }
