@@ -3,13 +3,7 @@
 namespace PHP\Project\Lvl2\gendiff;
 
 use function Functional\flatten;
-
-function makeAssociativeArray(string $filename): array
-{
-    $content = file_get_contents($filename);
-    $jsonArr = json_decode($content, true);
-    return $jsonArr;
-}
+use function PHP\Project\Lvl2\Parsers\makeAssociativeArray;
 
 function convertBoolToStr($value): string
 {
