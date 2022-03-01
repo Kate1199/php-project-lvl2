@@ -4,7 +4,7 @@ namespace PHP\Project\Lvl2;
 
 use PHPUnit\Framework\TestCase;
 
-use function PHP\Project\Lvl2\gendiff\makeAssociativeArray;
+use function PHP\Project\Lvl2\Parsers\makeAssociativeArray;
 use function PHP\Project\Lvl2\gendiff\convertBoolToStr;
 use function PHP\Project\Lvl2\gendiff\getDiffArray;
 use function PHP\Project\Lvl2\gendiff\gendiff;
@@ -13,11 +13,10 @@ class GendiffTest extends TestCase
 {
     private $file1;
     private $file2;
+    private $diff;
 
     public function setUp(): void
     {
-
-
         $this->file1 = [
             "host" => "hexlet.io",
             "timeout" => 50,
@@ -30,6 +29,16 @@ class GendiffTest extends TestCase
             "verbose" => true,
             "host" => "hexlet.io"
         ];
+
+        $this->diff = <<<DIF
+        - follow: false
+          host: hexlet.io
+        - proxy: 123.234.53.22
+        - timeout: 50
+        + timeout: 20
+        + verbose: true
+        
+        DIF;
     }
 
     public function testMakeAssociativeArray()
@@ -89,18 +98,26 @@ class GendiffTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testGendiff()
+    public function testGendiffJson()
     {
-        $expected = <<<DIF
-        - follow: false
-          host: hexlet.io
-        - proxy: 123.234.53.22
-        - timeout: 50
-        + timeout: 20
-        + verbose: true
-        
-        DIF;
+        $expected = $this->diff;
         $actual = gendiff('tests/fixtures/file1.json', 'tests/fixtures/file2.json');
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGendiffInvalidFilename()
+    {
+        $expected = '';
+        $actual = gendiff('test1', 'test2');
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testGendiffYaml()
+    {
+        $expected = $this->diff;
+        $actual = gendiff('tests/fixtures/file1.yml', 'tests/fixtures/file2.yml');
 
         $this->assertEquals($expected, $actual);
     }
