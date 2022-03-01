@@ -10,12 +10,14 @@
     ],
     "require": {
         "docopt/docopt": "^1.0",
-        "lstrojny/functional-php": "^1.17"
+        "lstrojny/functional-php": "^1.17",
+        "symfony/yaml": "^5.4"
     },
     "autoload": {
         "files": [
             "src/help.php",
-            "src/gendiff.php"
+            "src/gendiff.php",
+            "src/Parsers.php"
         ],
         "psr-4": {
             "PHP\\Project\\Lvl2\\GendiffTest\\": "tests//"
