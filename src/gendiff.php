@@ -5,53 +5,60 @@ namespace PHP\Project\Lvl2\gendiff;
 use function Functional\flatten;
 use function PHP\Project\Lvl2\Parsers\makeAssociativeArray;
 
-function convertBoolToStr($value): string
+function getDiffByKey(array $file1, array $file2, string $key): array
 {
-    $strValue = $value;
-
-    if (is_bool($value)) {
-        $strValue = $value ? 'true' : 'false';
+    if (!array_key_exists($key, $file1) && !array_key_exists($key, $file2)) {
+        return [];
     }
 
-    return $strValue;
+    if (!array_key_exists($key, $file1)) {
+        return ['type' => 'added', 'key' => $key, 'value' => $file2[$key]];
+    } elseif (!array_key_exists($key, $file2)) {
+        return ['type' => 'removed', 'key' => $key, 'value' => $file1[$key]];
+    } elseif ($file1[$key] === $file2[$key]) {
+        return ['type' => 'same', 'key' => $key, 'value' => $file1[$key]];
+    } elseif (isAssoc($file1[$key]) && isAssoc($file2[$key])) {
+        return ['type' => 'parent', 'key' => $key, 'value' => getChildrenDiff($file1[$key], $file2[$key])];
+    } elseif ($file1[$key] !== $file2[$key]) {
+        return ['type' => 'changed', 'key' => $key, 'value' => [$file1[$key], $file2[$key]]];
+    }
+
+    return $diff;
 }
 
-function getDiffArray(array $file1, array $file2, array $diff): array
+function isAssoc($content): bool
 {
-    $output = [];
-    $output = array_map(function ($key, $value) use ($file1, $file2) {
+    if (!is_array($content)) {
+        return false;
+    }
 
-        $value = convertBoolToStr($value);
-
-        if (array_key_exists($key, $file1) && array_key_exists($key, $file2)) {
-            $file2[$key] = convertBoolToStr($file2[$key]);
-            $file1[$key] = convertBoolToStr($file1[$key]);
-
-            if ($file1[$key] !== $file2[$key]) {
-                $result = ["- {$key}: {$file1[$key]}\n", "+ {$key}: {$file2[$key]}\n"];
-            } else {
-                $result = ["  {$key}: {$value}\n"];
-            }
-        } elseif (array_key_exists($key, $file1)) {
-            $result = ["- {$key}: {$value}\n"];
-        } else {
-            $result = ["+ {$key}: {$value}\n"];
-        }
-        return $result;
-    }, array_keys($diff), $diff);
-
-    return flatten($output);
+    $length = count($content);
+    return array_keys($content) !== range(0, $length - 1);
 }
 
-function genDiff(string $filename1, string $filename2): string
+function getChildrenDiff($file1, $file2): array
+{
+    $keys = array_merge(
+        array_keys($file1),
+        array_keys($file2)
+    );
+    $uniqueKeys = array_unique($keys);
+    sort($uniqueKeys);
+
+    if (empty($uniqueKeys)) {
+        return [];
+    }
+
+    return array_reduce($uniqueKeys, function ($acc, $key) use ($file1, $file2) {
+        $acc[] = getDiffByKey($file1, $file2, $key);
+        return $acc;
+    });
+}
+
+function genDiff(string $filename1, string $filename2): array
 {
     $file1 = makeAssociativeArray($filename1);
     $file2 = makeAssociativeArray($filename2);
 
-    $bothFiles = array_merge($file2, $file1);
-    ksort($bothFiles);
-
-    $output = getDiffArray($file1, $file2, $bothFiles);
-
-    return implode($output);
+    return getChildrenDiff($file1, $file2);
 }
