@@ -4,6 +4,10 @@
 require_once __DIR__ . "/../src/autoload.php";
 use function PHP\Project\Lvl2\help\getParams;
 use function PHP\Project\Lvl2\gendiff\genDiff;
+use function PHP\Project\Lvl2\stylish\format;
 
 $params = getParams();
-print_r(genDiff($params['<firstFile>'], $params['<secondFile>']));
+
+if ($params['--format'] === 'stylish') {
+    echo format(genDiff($params['<firstFile>'], $params['<secondFile>']));
+}
