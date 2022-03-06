@@ -17,7 +17,8 @@
         "files": [
             "src/help.php",
             "src/gendiff.php",
-            "src/Parsers.php"
+            "src/Parsers.php",
+            "src/stylish.php"
         ],
         "psr-4": {
             "PHP\\Project\\Lvl2\\GendiffTest\\": "tests//"
