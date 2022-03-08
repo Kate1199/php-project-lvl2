@@ -8,6 +8,5 @@ use function PHP\Project\Lvl2\stylish\format;
 
 $params = getParams();
 
-if ($params['--format'] === 'stylish') {
-    echo format(genDiff($params['<firstFile>'], $params['<secondFile>']));
-}
+echo genDiff($params['<firstFile>'], $params['<secondFile>'], $params['--format']);
+
