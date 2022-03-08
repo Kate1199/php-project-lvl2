@@ -14,6 +14,15 @@ class GendiffTest extends TestCase
     private $file2;
     private $diff;
 
+    private $stylishDiff;
+    private $plainDiff;
+
+    private $json1;
+    private $json2;
+
+    private $yml1;
+    private $yml2;
+
     public function setUp(): void
     {
         $this->file1 = [
@@ -47,6 +56,35 @@ class GendiffTest extends TestCase
             ['type' => 'changed', 'key' => 'timeout', 'value' => [50, 20]],
             ['type' => 'added', 'key' => 'verbose', 'value' => true]
         ];
+
+        $this->stylishDiff = <<<STR
+        {
+        - follow: false
+          host: hexlet.io
+          keyParent: {
+            - two: 2
+            + two: -2
+          }
+        - proxy: 123.234.53.22
+        - timeout: 50
+        + timeout: 20
+        + verbose: true
+        }
+        STR;
+
+        $this->plainDiff = <<<STR
+        Property 'follow' was removed
+        Property 'keyParent.two' was updated. From 2 to -2
+        Property 'proxy' was removed
+        Property 'timeout' was updated. From 50 to 20
+        Property 'verbose' was added with value: true
+        STR;
+
+        $this->json1 = 'tests/fixtures/simpleFile1.json';
+        $this->json2 = 'tests/fixtures/simpleFile2.json';
+
+        $this->yml1 = 'tests/fixtures/simpleFile1.yml';
+        $this->yml2 = 'tests/fixtures/simpleFile2.yml';
     }
 
     public function testGetDiffByKey()
@@ -99,25 +137,35 @@ class GendiffTest extends TestCase
 
     public function testGenDiffJson()
     {
-        $expected = $this->diff;
-        $actual = genDiff('tests/fixtures/simpleFile1.json', 'tests/fixtures/simpleFile2.json');
+        $expected1 = $this->stylishDiff;
+        $actual1 = genDiff($this->json1, $this->json2, 'stylish');
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected1, $actual1);
+
+        $expected2 = $this->plainDiff;
+        $actual2 = genDiff($this->json1, $this->json2, 'plain');
+
+        $this->assertEquals($expected2, $actual2);
     }
 
     public function testGenDiffInvalidFilename()
     {
-        $expected = [];
-        $actual = genDiff('test1', 'test2');
+        $expected = '';
+        $actual = genDiff('test1', 'test2', 'stylish');
 
         $this->assertEquals($expected, $actual);
     }
 
     public function testGenDiffYaml()
     {
-        $expected = $this->diff;
-        $actual = genDiff('tests/fixtures/simpleFile1.yml', 'tests/fixtures/simpleFile2.yml');
+        $expected1 = $this->stylishDiff;
+        $actual1 = genDiff($this->yml1, $this->yml2, 'stylish');
 
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected1, $actual1);
+
+        $expected2 = $this->plainDiff;
+        $actual2 = genDiff($this->yml1, $this->yml2, 'plain');
+
+        $this->assertEquals($expected2, $actual2);
     }
 }

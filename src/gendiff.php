@@ -4,6 +4,7 @@ namespace PHP\Project\Lvl2\gendiff;
 
 use function Functional\flatten;
 use function PHP\Project\Lvl2\Parsers\makeAssociativeArray;
+use function PHP\Project\Lvl2\Formatters\formatChooser;
 
 function getDiffByKey(array $file1, array $file2, string $key): array
 {
@@ -55,10 +56,12 @@ function getChildrenDiff($file1, $file2): array
     });
 }
 
-function genDiff(string $filename1, string $filename2): array
+function genDiff(string $filename1, string $filename2, string $format): string
 {
     $file1 = makeAssociativeArray($filename1);
     $file2 = makeAssociativeArray($filename2);
 
-    return getChildrenDiff($file1, $file2);
+    $outputArr = getChildrenDiff($file1, $file2);
+
+    return formatChooser($format, $outputArr);
 }
