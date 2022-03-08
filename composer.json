@@ -19,7 +19,8 @@
             "src/gendiff.php",
             "src/Parsers.php",
             "src/Formatters/stylish.php",
-            "src/Formatters/plain.php"
+            "src/Formatters/plain.php",
+            "src/Formatters.php"
         ],
         "psr-4": {
             "PHP\\Project\\Lvl2\\GendiffTest\\": "tests//"
