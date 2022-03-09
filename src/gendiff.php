@@ -56,7 +56,7 @@ function getChildrenDiff($file1, $file2): array
     });
 }
 
-function genDiff(string $filename1, string $filename2, string $format): string
+function genDiff(string $filename1, string $filename2, string $format = 'stylish'): string
 {
     $file1 = makeAssociativeArray($filename1);
     $file2 = makeAssociativeArray($filename2);
