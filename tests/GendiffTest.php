@@ -59,6 +59,9 @@ class GendiffTest extends TestCase
 
         $this->stylishDiff = <<<STR
         {
+        + add: {
+              child: 5
+          }
         - follow: false
           host: hexlet.io
           keyParent: {
@@ -73,6 +76,7 @@ class GendiffTest extends TestCase
         STR;
 
         $this->plainDiff = <<<STR
+        Property 'add' was added with value: [complex value]
         Property 'follow' was removed
         Property 'keyParent.two' was updated. From 2 to -2
         Property 'proxy' was removed
@@ -167,5 +171,26 @@ class GendiffTest extends TestCase
         $actual2 = genDiff($this->yml1, $this->yml2, 'plain');
 
         $this->assertEquals($expected2, $actual2);
+    }
+
+    public function testGenDiffFormatJson(): void
+    {
+        $expected = <<<STR
+        [
+            {"type":"added","key":"add","value":{"child":5}}
+            {"type":"removed","key":"follow","value":false}
+            {"type":"same","key":"host","value":"hexlet.io"}
+            {"type":"parent","key":"keyParent","value":[{"type":"changed","key":"two","value":[2,-2]}]}
+            {"type":"removed","key":"proxy","value":"123.234.53.22"}
+            {"type":"changed","key":"timeout","value":[50,20]}
+            {"type":"added","key":"verbose","value":true}
+        ]
+        STR;
+
+        $actual1 = genDiff($this->json1, $this->json2, 'json');
+        $this->assertEquals($expected, $actual1);
+
+        $actual2 = gendiff($this->yml1, $this->yml2, 'json');
+        $this->assertEquals($expected, $actual2);
     }
 }
