@@ -5,8 +5,19 @@ namespace Differ\Differ;
 
 require_once __DIR__ . "/../src/autoload.php";
 use function PHP\Project\Lvl2\help\getParams;
-use function PHP\Project\Lvl2\gendiff\genDiff;
-use function PHP\Project\Lvl2\stylish\format;
+use function PHP\Project\Lvl2\gendiff\getChildrenDiff;
+use function PHP\Project\Lvl2\Parsers\makeAssociativeArray;
+use function PHP\Project\Lvl2\Formatters\formatChooser;
+
+function getDiff(string $filename1, string $filename2, string $format): string
+{
+    $file1 = makeAssociativeArray($filename1);
+    $file2 = makeAssociativeArray($filename2);
+
+    $outputArr = getChildrenDiff($file1, $file2);
+
+    return formatChooser($format, $outputArr);
+}
 
 $params = getParams();
 echo genDiff($params['<firstFile>'], $params['<secondFile>'], $params['--format']);
