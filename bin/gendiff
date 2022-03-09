@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+namespace Differ\Differ\genDiff;
+
 require_once __DIR__ . "/../src/autoload.php";
 use function PHP\Project\Lvl2\help\getParams;
 use function PHP\Project\Lvl2\gendiff\genDiff;
