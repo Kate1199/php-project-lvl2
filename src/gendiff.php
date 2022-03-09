@@ -1,6 +1,6 @@
 <?php
 
-namespace PHP\Project\Lvl2\gendiff;
+namespace Differ\Differ;
 
 use function Functional\flatten;
 use function PHP\Project\Lvl2\Parsers\makeAssociativeArray;
