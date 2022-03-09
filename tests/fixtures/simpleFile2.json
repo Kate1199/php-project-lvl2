@@ -4,5 +4,8 @@
   "host": "hexlet.io",
   "keyParent": {
     "two": -2
+  },
+  "add": {
+    "child": 5
   }
 }
