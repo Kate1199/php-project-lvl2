@@ -20,6 +20,7 @@
             "src/Parsers.php",
             "src/Formatters/stylish.php",
             "src/Formatters/plain.php",
+            "src/Formatters/json.php",
             "src/Formatters.php"
         ],
         "psr-4": {
