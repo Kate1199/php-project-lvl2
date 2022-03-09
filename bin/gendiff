@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-namespace Differ\Differ\genDiff;
+namespace Differ\Differ;
 
 require_once __DIR__ . "/../src/autoload.php";
 use function PHP\Project\Lvl2\help\getParams;
@@ -9,6 +9,5 @@ use function PHP\Project\Lvl2\gendiff\genDiff;
 use function PHP\Project\Lvl2\stylish\format;
 
 $params = getParams();
-
 echo genDiff($params['<firstFile>'], $params['<secondFile>'], $params['--format']);
 
