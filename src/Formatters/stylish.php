@@ -20,11 +20,11 @@ function arrayToStr(array $arr, int $level = 0): string
             $indent = getIndent($level);
 
             if (!is_array($arr[$key])) {
-                $acc[] = "{$indent}  {$key}: {$arr[$key]}";
+                $acc[] = "{$indent}    {$key}: {$arr[$key]}";
                 return $acc;
             }
 
-            $acc[] = "{$indent}  {$key}: {\n" . arrayToStr($arr[$key], ++$level) . "\n{$indent}  }";
+            $acc[] = "{$indent}    {$key}: {\n" . arrayToStr($arr[$key], ++$level) . "\n{$indent}    }";
             return $acc;
         },
     );
@@ -36,7 +36,7 @@ function getValue($value, int $level)
 {
     $boolToStrValue = is_bool($value) ? boolToStr($value) : $value;
     $indent = getIndent($level);
-    $arrayToStrValue = is_array($value) ? "{\n" . arrayToStr($value, ++$level) . "\n  {$indent}}" : $boolToStrValue;
+    $arrayToStrValue = is_array($value) ? "{\n" . arrayToStr($value, ++$level) . "\n    {$indent}}" : $boolToStrValue;
     $nullToStr = is_null($value) ? 'null' : $arrayToStrValue;
 
     return $nullToStr;
@@ -55,26 +55,26 @@ function makeOutputArray(array $diff, int $level = 0): array
         $resultLine = '';
         switch ($item['type']) {
             case 'added':
-                $resultLine = "{$indent}+ {$key}: {$notParentValue}";
+                $resultLine = "{$indent}  + {$key}: {$notParentValue}";
                 break;
             case 'removed':
-                $resultLine = "{$indent}- {$key}: {$notParentValue}";
+                $resultLine = "{$indent}  - {$key}: {$notParentValue}";
                 break;
             case 'same':
-                $resultLine = "{$indent}  {$key}: {$notParentValue}";
+                $resultLine = "{$indent}    {$key}: {$notParentValue}";
                 break;
             case 'changed':
                 $old = 0;
                 $new = 1;
                 $oldValue = getValue($value[$old], $level);
                 $newValue = getValue($value[$new], $level);
-                $resultLine = "{$indent}- {$key}: {$oldValue}\n{$indent}+ {$key}: {$newValue}";
+                $resultLine = "{$indent}  - {$key}: {$oldValue}\n{$indent}  + {$key}: {$newValue}";
                 break;
             case 'parent':
                 $resArr = makeOutputArray($value, ++$level);
                 $value = implode(PHP_EOL, $resArr);
                 $minIndent = getIndent($level, "  ");
-                $resultLine = "{$indent}  {$key}: {\n{$value}\n  {$indent}}";
+                $resultLine = "{$indent}    {$key}: {\n{$value}\n    {$indent}}";
                 break;
         }
 
