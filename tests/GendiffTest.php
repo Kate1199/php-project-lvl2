@@ -4,9 +4,9 @@ namespace PHP\Project\Lvl2;
 
 use PHPUnit\Framework\TestCase;
 
-use function PHP\Project\Lvl2\gendiff\getDiffByKey;
-use function PHP\Project\Lvl2\gendiff\getChildrenDiff;
-use function PHP\Project\Lvl2\gendiff\gendiff;
+use function Differ\Differ\getDiffByKey;
+use function Differ\Differ\getChildrenDiff;
+use function Differ\Differ\gendiff;
 
 class GendiffTest extends TestCase
 {
@@ -59,19 +59,19 @@ class GendiffTest extends TestCase
 
         $this->stylishDiff = <<<STR
         {
-        + add: {
-              child: 5
-          }
-        - follow: false
-          host: hexlet.io
-          keyParent: {
-            - two: 2
-            + two: -2
-          }
-        - proxy: 123.234.53.22
-        - timeout: 50
-        + timeout: 20
-        + verbose: true
+          + add: {
+                child: 5
+            }
+          - follow: false
+            host: hexlet.io
+            keyParent: {
+              - two: 2
+              + two: -2
+            }
+          - proxy: 123.234.53.22
+          - timeout: 50
+          + timeout: 20
+          + verbose: true
         }
         STR;
 
