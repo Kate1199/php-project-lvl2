@@ -179,13 +179,61 @@ class GendiffTest extends TestCase
     {
         $expected = <<<STR
         [
-            {"type":"added","key":"add","value":{"child":5}}
-            {"type":"removed","key":"follow","value":false}
-            {"type":"same","key":"host","value":"hexlet.io"}
-            {"type":"parent","key":"keyParent","value":[{"type":"parent","key":"key","value":[{"type":"changed","key":"two","value":[2,-2]}]}]}
-            {"type":"removed","key":"proxy","value":"123.234.53.22"}
-            {"type":"changed","key":"timeout","value":[50,20]}
-            {"type":"added","key":"verbose","value":true}
+            {
+                "type": "added",
+                "key": "add",
+                "value": {
+                    "child": 5
+                }
+            },
+            {
+                "type": "removed",
+                "key": "follow",
+                "value": false
+            },
+            {
+                "type": "same",
+                "key": "host",
+                "value": "hexlet.io"
+            },
+            {
+                "type": "parent",
+                "key": "keyParent",
+                "value": [
+                    {
+                        "type": "parent",
+                        "key": "key",
+                        "value": [
+                            {
+                                "type": "changed",
+                                "key": "two",
+                                "value": [
+                                    2,
+                                    -2
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "type": "removed",
+                "key": "proxy",
+                "value": "123.234.53.22"
+            },
+            {
+                "type": "changed",
+                "key": "timeout",
+                "value": [
+                    50,
+                    20
+                ]
+            },
+            {
+                "type": "added",
+                "key": "verbose",
+                "value": true
+            }
         ]
         STR;
 
