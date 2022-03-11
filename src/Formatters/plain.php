@@ -4,7 +4,7 @@ namespace PHP\Project\Lvl2\Formatters\plain;
 
 use function Functional\flatten;
 
-function getValue($value)
+function getValue(mixed $value)
 {
     $boolToStr = is_bool($value) ? ($value ? 'true' : 'false') : $value;
     $arrToStr = is_array($value) ? "[complex value]" : $boolToStr;
