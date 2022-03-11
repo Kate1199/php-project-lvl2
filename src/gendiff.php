@@ -23,8 +23,6 @@ function getDiffByKey(array $file1, array $file2, string $key): array
     } elseif ($file1[$key] !== $file2[$key]) {
         return ['type' => 'changed', 'key' => $key, 'value' => [$file1[$key], $file2[$key]]];
     }
-
-    return $diff;
 }
 
 function isAssoc($content): bool
@@ -46,7 +44,7 @@ function getChildrenDiff($file1, $file2): array
     $uniqueKeys = array_unique($keys);
     sort($uniqueKeys);
 
-    if (empty($uniqueKeys)) {
+    if (count($uniqueKeys) === 0) {
         return [];
     }
 

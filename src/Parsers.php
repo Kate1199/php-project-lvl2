@@ -23,12 +23,18 @@ function makeAssociativeArray(string $filename): array
         return [];
     }
 
+    if ($content === false) {
+        return [];
+    } else {
+        $realContent = $content;
+    }
+
     $extension = defineFileType($filename);
 
     if ($extension === 'json') {
-        $assocArr = json_decode($content, true);
+        $assocArr = json_decode($realContent, true);
     } elseif ($extension === 'yml' || $extension === 'yaml') {
-        $assocArr = Yaml::parse($content);
+        $assocArr = Yaml::parse($realContent);
     } else {
         $assocArr = [];
     }

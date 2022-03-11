@@ -25,11 +25,10 @@ function makeOutputArray(array $diff, string $parentKeys = ""): array
 
         switch ($item['type']) {
             case 'added':
-                $value = getValue($value);
-                $acc[] = "{$staticTemplate} added with value: {$value}";
+                $addedValue = getValue($value);
+                $acc[] = sprintf("%s added with value: %s", $staticTemplate, $addedValue);
                 break;
             case 'removed':
-                $value = getValue($value);
                 $acc[] = "{$staticTemplate} removed";
                 break;
             case 'changed':
@@ -37,7 +36,7 @@ function makeOutputArray(array $diff, string $parentKeys = ""): array
                 $new = 1;
                 $oldValue = getValue($value[$old]);
                 $newValue = getValue($value[$new]);
-                $acc[] = "{$staticTemplate} updated. From {$oldValue} to {$newValue}";
+                $acc[] = sprintf("%s updated. From %s to %s", $staticTemplate, $oldValue, $newValue);
                 break;
             case 'parent':
                 $parentKey = "{$property}.";

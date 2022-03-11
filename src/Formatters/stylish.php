@@ -84,7 +84,7 @@ function makeOutputArray(array $diff, int $level = 0): array
 
 function formatStylish(array $diff)
 {
-    if (empty($diff)) {
+    if (count($diff) === 0) {
         return '';
     }
 
