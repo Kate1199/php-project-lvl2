@@ -25,8 +25,8 @@ function makeOutputArray(array $diff, string $parentKeys = ""): array
 
         switch ($item['type']) {
             case 'added':
-                $value = getValue($value);
-                $acc[] = "{$staticTemplate} added with value: {$value}";
+                $value1 = getValue($value);
+                $acc[] = sprintf("%s added with value: %s", $staticTemplate, $value1);
                 break;
             case 'removed':
                 $value = getValue($value);
