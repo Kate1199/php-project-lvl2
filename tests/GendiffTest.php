@@ -65,8 +65,10 @@ class GendiffTest extends TestCase
           - follow: false
             host: hexlet.io
             keyParent: {
-              - two: 2
-              + two: -2
+                key: {
+                  - two: 2
+                  + two: -2
+                }
             }
           - proxy: 123.234.53.22
           - timeout: 50
@@ -78,7 +80,7 @@ class GendiffTest extends TestCase
         $this->plainDiff = <<<STR
         Property 'add' was added with value: [complex value]
         Property 'follow' was removed
-        Property 'keyParent.two' was updated. From 2 to -2
+        Property 'keyParent.key.two' was updated. From 2 to -2
         Property 'proxy' was removed
         Property 'timeout' was updated. From 50 to 20
         Property 'verbose' was added with value: true
@@ -180,7 +182,7 @@ class GendiffTest extends TestCase
             {"type":"added","key":"add","value":{"child":5}}
             {"type":"removed","key":"follow","value":false}
             {"type":"same","key":"host","value":"hexlet.io"}
-            {"type":"parent","key":"keyParent","value":[{"type":"changed","key":"two","value":[2,-2]}]}
+            {"type":"parent","key":"keyParent","value":[{"type":"parent","key":"key","value":[{"type":"changed","key":"two","value":[2,-2]}]}]}
             {"type":"removed","key":"proxy","value":"123.234.53.22"}
             {"type":"changed","key":"timeout","value":[50,20]}
             {"type":"added","key":"verbose","value":true}

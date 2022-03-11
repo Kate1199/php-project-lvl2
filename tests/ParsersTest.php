@@ -19,7 +19,9 @@ class ParsersTest extends TestCase
             "proxy" => "123.234.53.22",
             "follow" => false,
             "keyParent" => [
-                "two" => 2
+                "key" => [
+                    "two" => 2
+                ]
             ]
         ];
     }
