@@ -51,8 +51,7 @@ function makeOutputArray(array $diff, string $parentKeys = ""): array
 function formatPlain(array $diff): string
 {
     $outputArr = makeOutputArray($diff);
-    // @phpstan-ignore-line
-    flatten($outputArr);
+    flatten($outputArr); // @phpstan-ignore-line
 
     return implode("\n", $outputArr);
 }
