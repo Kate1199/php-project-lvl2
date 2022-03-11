@@ -23,28 +23,30 @@ function makeOutputArray(array $diff, string $parentKeys = ""): array
 
         $staticTemplate = "Property '{$property}' was";
 
+        $message = '';
         switch ($item['type']) {
             case 'added':
                 $addedValue = getValue($value);
-                $acc[] = sprintf("%s added with value: %s", $staticTemplate, $addedValue);
+                $message = sprintf("%s added with value: %s", $staticTemplate, $addedValue);
                 break;
             case 'removed':
-                $acc[] = "{$staticTemplate} removed";
+                $message = "{$staticTemplate} removed";
                 break;
             case 'changed':
                 $old = 0;
                 $new = 1;
                 $oldValue = getValue($value[$old]);
                 $newValue = getValue($value[$new]);
-                $acc[] = sprintf("%s updated. From %s to %s", $staticTemplate, $oldValue, $newValue);
+                $message = sprintf("%s updated. From %s to %s", $staticTemplate, $oldValue, $newValue);
                 break;
             case 'parent':
                 $parentKey = "{$property}.";
-                $acc[] = makeOutputArray($value, $parentKey);
+                $message = makeOutputArray($value, $parentKey);
                 break;
             default:
                 break;
         }
+        $acc[] = $message;
 
         return flatten($acc);
     }, []);
