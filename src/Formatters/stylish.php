@@ -2,7 +2,7 @@
 
 namespace PHP\Project\Lvl2\Formatters\stylish;
 
-function boolToStr(mixed $value): string
+function boolToStr(bool $value): string
 {
     return $value ? 'true' : 'false';
 }
@@ -23,7 +23,8 @@ function arrayToStr(array $arr, int $level = 0): string
                 $outputChild = ["{$indent}    {$key}: {$arr[$key]}"];
                 return array_merge($acc, $outputChild);
             }
-            $output = ["{$indent}    {$key}: {\n" . arrayToStr($arr[$key], ++$level) . "\n{$indent}    }"];
+            $childArray = arrayToStr($arr[$key], $level + 1);
+            $output = ["{$indent}    {$key}: {\n{$childArray}\n{$indent}    }"];
             return array_merge($acc, $output);
         },
         []
@@ -36,7 +37,7 @@ function getValue(mixed $value, int $level)
 {
     $boolToStrValue = is_bool($value) ? boolToStr($value) : $value;
     $indent = getIndent($level);
-    $arrayToStrValue = is_array($value) ? "{\n" . arrayToStr($value, ++$level) . "\n    {$indent}}" : $boolToStrValue;
+    $arrayToStrValue = is_array($value) ? "{\n" . arrayToStr($value, $level + 1) . "\n    {$indent}}" : $boolToStrValue;
     $nullToStr = is_null($value) ? 'null' : $arrayToStrValue;
 
     return $nullToStr;
@@ -66,8 +67,8 @@ function makeOutputArray(array $diff, int $level = 0): array
             $newValue = getValue($value[$new], $level);
             return "{$indent}  - {$key}: {$oldValue}\n{$indent}  + {$key}: {$newValue}";
         } elseif ($type === 'parent') {
-            $resArr = makeOutputArray($value, ++$level);
-            $value = implode(PHP_EOL, $resArr);
+            $resArr = makeOutputArray($value, $level + 1);
+            $value = implode("\n", $resArr);
             $minIndent = getIndent($level, "  ");
             return "{$indent}    {$key}: {\n{$value}\n    {$indent}}";
         }
@@ -81,7 +82,7 @@ function formatStylish(array $diff)
     }
 
     $outputArr = makeOutputArray($diff);
-    $output = implode(PHP_EOL, $outputArr);
+    $output = implode("\n", $outputArr);
 
     return "{\n{$output}\n}";
 }
