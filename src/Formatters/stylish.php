@@ -21,10 +21,10 @@ function arrayToStr(array $arr, int $level = 0): string
 
             if (!is_array($arr[$key])) {
                 $outputChild = ["{$indent}    {$key}: {$arr[$key]}"];
-                return array_merge($outputChild, $acc);
+                return array_merge($acc, $outputChild);
             }
             $output = ["{$indent}    {$key}: {\n" . arrayToStr($arr[$key], ++$level) . "\n{$indent}    }"];
-            return array_merge($output, $acc);
+            return array_merge($acc, $output);
         },
         []
     );
