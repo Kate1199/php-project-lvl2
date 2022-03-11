@@ -20,41 +20,38 @@ function makeOutputArray(array $diff, string $parentKeys = ""): array
         $key = $item['key'];
         $property = "{$parentKeys}{$key}";
         $value = $item['value'];
+        $type = $item['type'];
 
         $staticTemplate = "Property '{$property}' was";
 
-        $messages = [];
-        switch ($item['type']) {
-            case 'added':
-                $addedValue = getValue($value);
-                $messages[] = sprintf("%s added with value: %s", $staticTemplate, $addedValue);
-                break;
-            case 'removed':
-                $messages[] = sprintf("%s removed", $staticTemplate);
-                break;
-            case 'changed':
-                $old = 0;
-                $new = 1;
-                $oldValue = getValue($value[$old]);
-                $newValue = getValue($value[$new]);
-                $messages[] = sprintf("%s updated. From %s to %s", $staticTemplate, $oldValue, $newValue);
-                break;
-            case 'parent':
-                $parentKey = "{$property}.";
-                $messages[] = makeOutputArray($value, $parentKey);
-                break;
-            default:
-                break;
-        }
-        $acc[] = $messages;
+        if ($type === 'added') {
+            $addedValue = getValue($value);
+            $messageIfAdded = [sprintf("%s added with value: %s", $staticTemplate, $addedValue)];
+            return array_merge($acc, $messageIfAdded);
+        } elseif ($type === 'removed') {
+            $messageIfRemoved = [sprintf("%s removed", $staticTemplate)];
+            return array_merge($acc, $messageIfRemoved);
+        } elseif ($type === 'changed') {
+            $old = 0;
+            $new = 1;
+            $oldValue = getValue($value[$old]);
+            $newValue = getValue($value[$new]);
 
-        return flatten($acc);
+            $messageIfChanged = [sprintf("%s updated. From %s to %s", $staticTemplate, $oldValue, $newValue)];
+            return array_merge($acc, $messageIfChanged);
+        } elseif ($type === 'parent') {
+            $parentKey = "{$property}.";
+            return array_merge($acc, makeOutputArray($value, $parentKey));
+        } else {
+                return $acc;
+        }
     }, []);
 }
 
 function formatPlain(array $diff): string
 {
     $outputArr = makeOutputArray($diff);
+    flatten($outputArr);
 
     return implode("\n", $outputArr);
 }
