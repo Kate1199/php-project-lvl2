@@ -68,9 +68,9 @@ function makeOutputArray(array $diff, int $level = 0): array
             return "{$indent}  - {$key}: {$oldValue}\n{$indent}  + {$key}: {$newValue}";
         } elseif ($type === 'parent') {
             $resArr = makeOutputArray($value, $level + 1);
-            $value = implode("\n", $resArr);
+            $output = implode("\n", $resArr);
             $minIndent = getIndent($level, "  ");
-            return "{$indent}    {$key}: {\n{$value}\n    {$indent}}";
+            return "{$indent}    {$key}: {\n{$output}\n    {$indent}}";
         }
     }, $diff);
 }
