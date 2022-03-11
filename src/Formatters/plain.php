@@ -40,7 +40,7 @@ function makeOutputArray(array $diff, string $parentKeys = ""): array
                 $acc[] = "{$staticTemplate} updated. From {$oldValue} to {$newValue}";
                 break;
             case 'parent':
-                $parentKey = "{$key}.";
+                $parentKey = "{$property}.";
                 $acc[] = makeOutputArray($value, $parentKey);
                 break;
             default:
@@ -55,5 +55,5 @@ function formatPlain(array $diff): string
 {
     $outputArr = makeOutputArray($diff);
 
-    return implode(PHP_EOL, $outputArr);
+    return implode("\n", $outputArr);
 }
