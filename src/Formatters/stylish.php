@@ -2,7 +2,7 @@
 
 namespace PHP\Project\Lvl2\Formatters\stylish;
 
-function boolToStr($value): string
+function boolToStr(mixed $value): string
 {
     return $value ? 'true' : 'false';
 }
@@ -20,19 +20,19 @@ function arrayToStr(array $arr, int $level = 0): string
             $indent = getIndent($level);
 
             if (!is_array($arr[$key])) {
-                $acc[] = "{$indent}    {$key}: {$arr[$key]}";
-                return $acc;
+                $outputChild = ["{$indent}    {$key}: {$arr[$key]}"];
+                return array_merge($outputChild, $acc);
             }
-
-            $acc[] = "{$indent}    {$key}: {\n" . arrayToStr($arr[$key], ++$level) . "\n{$indent}    }";
-            return $acc;
+            $output = ["{$indent}    {$key}: {\n" . arrayToStr($arr[$key], ++$level) . "\n{$indent}    }"];
+            return array_merge($output, $acc);
         },
+        []
     );
 
     return implode("\n", $resultArr);
 }
 
-function getValue($value, int $level)
+function getValue(mixed $value, int $level)
 {
     $boolToStrValue = is_bool($value) ? boolToStr($value) : $value;
     $indent = getIndent($level);
@@ -49,36 +49,28 @@ function makeOutputArray(array $diff, int $level = 0): array
         $key = $item['key'];
         $value = $item['value'];
         $notParentValue = getValue($value, $level);
+        $type = $item['type'];
 
         $indent = getIndent($level);
 
-        $resultLine = '';
-        switch ($item['type']) {
-            case 'added':
-                $resultLine = "{$indent}  + {$key}: {$notParentValue}";
-                break;
-            case 'removed':
-                $resultLine = "{$indent}  - {$key}: {$notParentValue}";
-                break;
-            case 'same':
-                $resultLine = "{$indent}    {$key}: {$notParentValue}";
-                break;
-            case 'changed':
-                $old = 0;
-                $new = 1;
-                $oldValue = getValue($value[$old], $level);
-                $newValue = getValue($value[$new], $level);
-                $resultLine = "{$indent}  - {$key}: {$oldValue}\n{$indent}  + {$key}: {$newValue}";
-                break;
-            case 'parent':
-                $resArr = makeOutputArray($value, ++$level);
-                $value = implode(PHP_EOL, $resArr);
-                $minIndent = getIndent($level, "  ");
-                $resultLine = "{$indent}    {$key}: {\n{$value}\n    {$indent}}";
-                break;
+        if ($type === 'added') {
+            return "{$indent}  + {$key}: {$notParentValue}";
+        } elseif ($type === 'removed') {
+            return "{$indent}  - {$key}: {$notParentValue}";
+        } elseif ($type === 'same') {
+            return "{$indent}    {$key}: {$notParentValue}";
+        } elseif ($type === 'changed') {
+            $old = 0;
+            $new = 1;
+            $oldValue = getValue($value[$old], $level);
+            $newValue = getValue($value[$new], $level);
+            return "{$indent}  - {$key}: {$oldValue}\n{$indent}  + {$key}: {$newValue}";
+        } elseif ($type === 'parent') {
+            $resArr = makeOutputArray($value, ++$level);
+            $value = implode(PHP_EOL, $resArr);
+            $minIndent = getIndent($level, "  ");
+            return "{$indent}    {$key}: {\n{$value}\n    {$indent}}";
         }
-
-        return $resultLine;
     }, $diff);
 }
 
