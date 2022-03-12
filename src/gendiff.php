@@ -6,7 +6,7 @@ use function Functional\flatten;
 use function PHP\Project\Lvl2\Parsers\makeAssociativeArray;
 use function PHP\Project\Lvl2\Formatters\formatChooser;
 
-function getDiffByKey(array $file1, array $file2, string $key): array
+function getDiffByKey(array $file1, array $file2, mixed $key): array
 {
     if (!array_key_exists($key, $file1) && !array_key_exists($key, $file2)) {
         return [];
@@ -23,9 +23,11 @@ function getDiffByKey(array $file1, array $file2, string $key): array
     } elseif ($file1[$key] !== $file2[$key]) {
         return ['type' => 'changed', 'key' => $key, 'value' => [$file1[$key], $file2[$key]]];
     }
+
+    return [];
 }
 
-function isAssoc($content): bool
+function isAssoc(mixed $content): bool
 {
     if (!is_array($content)) {
         return false;
@@ -35,22 +37,22 @@ function isAssoc($content): bool
     return array_keys($content) !== range(0, $length - 1);
 }
 
-function getChildrenDiff($file1, $file2): array
+function getChildrenDiff(mixed $file1, mixed $file2): array
 {
     $keys = array_merge(
         array_keys($file1),
         array_keys($file2)
     );
     $uniqueKeys = array_unique($keys);
-    sort($uniqueKeys);
+    $sortedKeys = collect($uniqueKeys)->sort()->toArray(); // @phpstan-ignore-line
 
-    if (count($uniqueKeys) === 0) {
+    if (count($sortedKeys) === 0) {
         return [];
     }
 
-    return array_reduce($uniqueKeys, function ($acc, $key) use ($file1, $file2) {
-        $acc[] = getDiffByKey($file1, $file2, $key);
-        return $acc;
+    return array_reduce($sortedKeys, function ($acc, $key) use ($file1, $file2) {
+        $diff = getDiffByKey($file1, $file2, $key);
+        return array_merge($acc, $diff);
     });
 }
 
