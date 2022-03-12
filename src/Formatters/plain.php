@@ -2,8 +2,6 @@
 
 namespace PHP\Project\Lvl2\Formatters\plain;
 
-use function Functional\flatten;
-
 function getValue(mixed $value)
 {
     $boolToStr = is_bool($value) ? ($value ? 'true' : 'false') : $value;
@@ -51,7 +49,7 @@ function makeOutputArray(array $diff, string $parentKeys = ""): array
 function formatPlain(array $diff): string
 {
     $outputArr = makeOutputArray($diff);
-    flatten($outputArr); // @phpstan-ignore-line
+    $flattened = collect($outputArr)->flatten($outputArr)->toArray(); // @phpstan-ignore-line
 
-    return implode("\n", $outputArr);
+    return implode("\n", $flattened);
 }
