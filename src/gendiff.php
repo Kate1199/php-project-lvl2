@@ -51,9 +51,9 @@ function getChildrenDiff(mixed $file1, mixed $file2): array
     }
 
     return array_reduce($sortedKeys, function ($acc, $key) use ($file1, $file2) {
-        $diff = getDiffByKey($file1, $file2, $key);
+        $diff = [getDiffByKey($file1, $file2, $key)];
         return array_merge($acc, $diff);
-    });
+    }, []);
 }
 
 function genDiff(string $filename1, string $filename2, string $format = 'stylish'): string
