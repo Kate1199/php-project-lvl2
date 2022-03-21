@@ -1,0 +1,8 @@
+timeout: 20
+verbose: true
+host: hexlet.io
+keyParent:
+    key:
+        two: -2
+add:
+    child: 5
