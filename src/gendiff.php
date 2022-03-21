@@ -2,18 +2,18 @@
 
 namespace Differ\Differ;
 
-use function PHP\Project\Lvl2\Parsers\makeAssociativeArray;
+use function PHP\Project\Lvl2\Parsers\parseFIle;
 use function PHP\Project\Lvl2\Formatters\formatChooser;
 
 function getDiffByKey(array $file1, array $file2, mixed $key): array
 {
-    if (!array_key_exists($key, $file1) && !array_key_exists($key, $file2)) {
+    if (!isset($file1[$key]) && !isset($file2[$key])) {
         return [];
     }
 
-    if (!array_key_exists($key, $file1)) {
+    if (!isset($file1[$key])) {
         return ['type' => 'added', 'key' => $key, 'value' => $file2[$key]];
-    } elseif (!array_key_exists($key, $file2)) {
+    } elseif (!isset($file2[$key])) {
         return ['type' => 'removed', 'key' => $key, 'value' => $file1[$key]];
     } elseif ($file1[$key] === $file2[$key]) {
         return ['type' => 'same', 'key' => $key, 'value' => $file1[$key]];
@@ -36,7 +36,7 @@ function isAssoc(mixed $content): bool
     return array_keys($content) !== range(0, $length - 1);
 }
 
-function getChildrenDiff(mixed $file1, mixed $file2): array
+function getChildrenDiff(array $file1, array $file2): array
 {
     $keys = array_merge(
         array_keys($file1),
@@ -57,10 +57,10 @@ function getChildrenDiff(mixed $file1, mixed $file2): array
 
 function genDiff(string $filename1, string $filename2, string $format = 'stylish'): string
 {
-    $file1 = makeAssociativeArray($filename1);
-    $file2 = makeAssociativeArray($filename2);
+    $fileArr1 = parseFile($filename1);
+    $fileArr2 = parseFile($filename2);
 
-    $outputArr = getChildrenDiff($file1, $file2);
+    $outputArr = getChildrenDiff($fileArr1, $fileArr2);
 
     return formatChooser($format, $outputArr);
 }
