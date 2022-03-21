@@ -45,7 +45,6 @@ function getValue(mixed $value, int $level)
 
 function makeOutputArray(array $diff, int $level = 0): array
 {
-
     return array_map(function ($item) use ($level) {
         $key = $item['key'];
         $value = $item['value'];
@@ -54,23 +53,22 @@ function makeOutputArray(array $diff, int $level = 0): array
 
         $indent = getIndent($level);
 
-        if ($type === 'added') {
-            return "{$indent}  + {$key}: {$notParentValue}";
-        } elseif ($type === 'removed') {
-            return "{$indent}  - {$key}: {$notParentValue}";
-        } elseif ($type === 'same') {
-            return "{$indent}    {$key}: {$notParentValue}";
-        } elseif ($type === 'changed') {
-            $old = 0;
-            $new = 1;
-            $oldValue = getValue($value[$old], $level);
-            $newValue = getValue($value[$new], $level);
-            return "{$indent}  - {$key}: {$oldValue}\n{$indent}  + {$key}: {$newValue}";
-        } elseif ($type === 'parent') {
-            $resArr = makeOutputArray($value, $level + 1);
-            $output = implode("\n", $resArr);
-            $minIndent = getIndent($level, "  ");
-            return "{$indent}    {$key}: {\n{$output}\n    {$indent}}";
+        switch ($item['type']) {
+            case 'added':
+                return sprintf("%s  + %s: %s", $indent, $key, $notParentValue);
+            case 'removed':
+                return sprintf("%s  - %s: %s", $indent, $key, $notParentValue);
+            case 'same':
+                return sprintf("%s    %s: %s", $indent, $key, $notParentValue);
+            case 'changed':
+                $oldValue = getValue($value[0], $level);
+                $newValue = getValue($value[1], $level);
+                return sprintf("%s  - %s: %s\n%s  + %s: %s", $indent, $key, $oldValue, $indent, $key, $newValue);
+            case 'parent':
+                $resArr = makeOutputArray($value, $level + 1);
+                $output = implode("\n", $resArr);
+                $minIndent = getIndent($level, "  ");
+                return sprintf("%s    %s: {\n%s\n    %s}", $indent, $key, $output, $indent);
         }
     }, $diff);
 }
@@ -84,5 +82,5 @@ function formatStylish(array $diff)
     $outputArr = makeOutputArray($diff);
     $output = implode("\n", $outputArr);
 
-    return "{\n{$output}\n}";
+    return sprintf("{\n%s\n}", $output);
 }
