@@ -16,11 +16,11 @@ function makeOutputArray(array $diff, string $parentKeys = ""): array
 {
     return array_reduce($diff, function ($acc, $item) use ($parentKeys) {
         $key = $item['key'];
-        $property = "{$parentKeys}{$key}";
+        $property = sprintf("%s%s", $parentKeys, $key);
         $value = $item['value'];
         $type = $item['type'];
 
-        $staticTemplate = "Property '{$property}' was";
+        $staticTemplate = sprintf("Property '%s' was", $property);
 
         if ($type === 'added') {
             $addedValue = getValue($value);
@@ -30,15 +30,13 @@ function makeOutputArray(array $diff, string $parentKeys = ""): array
             $messageIfRemoved = [sprintf("%s removed", $staticTemplate)];
             return array_merge($acc, $messageIfRemoved);
         } elseif ($type === 'changed') {
-            $old = 0;
-            $new = 1;
-            $oldValue = getValue($value[$old]);
-            $newValue = getValue($value[$new]);
+            $oldValue = getValue($value[0]);
+            $newValue = getValue($value[1]);
 
             $messageIfChanged = [sprintf("%s updated. From %s to %s", $staticTemplate, $oldValue, $newValue)];
             return array_merge($acc, $messageIfChanged);
         } elseif ($type === 'parent') {
-            $parentKey = "{$property}.";
+            $parentKey = sprintf("%s.", $property);
             return array_merge($acc, makeOutputArray($value, $parentKey));
         } else {
                 return $acc;
