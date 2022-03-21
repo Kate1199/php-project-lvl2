@@ -6,38 +6,47 @@ use Symfony\Component\Yaml\Yaml;
 
 function defineFileType(string $filename): string
 {
-    $pointPos = strpos($filename, '.');
+    $info = new \SplFileInfo($filename);
 
-    if ($pointPos === false) {
-        return '';
-    }
-
-    return substr($filename, $pointPos + 1);
+    return $info->getExtension();
 }
 
-function makeAssociativeArray(string $filename): array
+function getContent(string $filename): string
 {
     if (file_exists($filename)) {
         $content = file_get_contents($filename);
     } else {
-        return [];
+        return '';
     }
 
     if ($content === false) {
-        return [];
+        return '';
     } else {
-        $realContent = $content;
+        return $content;
     }
+}
 
-    $extension = defineFileType($filename);
-
-    if ($extension === 'json') {
-        $assocArr = json_decode($realContent, true);
-    } elseif ($extension === 'yml' || $extension === 'yaml') {
-        $assocArr = Yaml::parse($realContent);
-    } else {
-        $assocArr = [];
+function makeAssociativeArray(string $content, string $extension): array
+{
+    switch ($extension) {
+        case 'json':
+            $assocArr = json_decode($content, true);
+            break;
+        case ('yml' || 'yaml'):
+            $assocArr = Yaml::parse($content);
+            break;
+        default:
+            $assocArr = [];
+            break;
     }
 
     return $assocArr;
+}
+
+function parseFile(string $filename): array
+{
+    $content = getContent($filename);
+    $extension = defineFileType($filename);
+
+    return makeAssociativeArray($content, $extension);
 }

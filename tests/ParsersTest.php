@@ -6,9 +6,24 @@ use PHPUnit\Framework\TestCase;
 
 use function PHP\Project\Lvl2\Parsers\defineFileType;
 use function PHP\Project\Lvl2\Parsers\makeAssociativeArray;
+use function PHP\Project\Lvl2\Parsers\parseFile;
 
 class ParsersTest extends TestCase
 {
+    private $content = <<<STR
+    {
+        "host": "hexlet.io",
+        "timeout": 50,
+        "proxy": "123.234.53.22",
+        "follow": false,
+        "keyParent": {
+            "key": {
+              "two": 2
+            }
+        }
+      }
+    STR;
+
     private $parsedFile;
 
     public function setUp(): void
@@ -47,21 +62,21 @@ class ParsersTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testMakeAssociativeArray()
+    public function testParseFile(): void
     {
         $expected = $this->parsedFile;
 
-        $actual1 = makeAssociativeArray('tests/fixtures/simpleFile1.json');
+        $actual1 = parseFile('tests/fixtures/simpleFile1.json');
         $this->assertEquals($expected, $actual1);
 
-        $actual2 = makeAssociativeArray('tests/fixtures/simpleFile1.yml');
+        $actual2 = parseFile('tests/fixtures/simpleFile1.yml');
         $this->assertEquals($expected, $actual2);
     }
 
-    public function testMakeAssociativeArrayInvalidPath(): void
+    public function testParseFileNotExists(): void
     {
         $expected = [];
-        $actual = makeAssociativeArray('test');
+        $actual = parseFile('test');
 
         $this->assertEquals($expected, $actual);
     }
